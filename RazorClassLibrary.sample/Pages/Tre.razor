@@ -1,0 +1,97 @@
+﻿@page "/tre"
+
+<br /> Введите значения длин сторон треугольника
+
+<br /> <InputNumber @bind-Value="AA" />
+<br /> <InputNumber @bind-Value="BB" />
+<br /> <InputNumber @bind-Value="CC" />
+
+<br /><br /><div style="color:blue; font-size:0.8rem">подсказка значения гипотенузы для прямоугольного - @ab2sqrt</div>
+<br /><div style="color:blue; font-size:0.8rem">или введите значения 3, 4, 5</div>
+
+<br />
+<br />
+<button class="btn btn-primary" @onclick="Start">Проверить</button> 
+
+<br />
+<br />длины строн по возрастанию:
+<br />a = @a , b = @b , c = @c
+
+<br /><br />Треугольник - @status
+<br /><div style="color:red; font-size: 0.8rem">@ops</div>
+
+@code {
+    double AA, BB, CC, x, y, a, b, c, ab2, c2, ab2sqrt;
+    string? status, ops;
+
+    private void Start()
+    {
+        status = "";
+        ops = "";
+        ab2sqrt = 0;
+
+        //проверяем исключения, ищем меньший катет, больший катет, гипотенузу
+        if (AA > 0 && BB > 0 && CC > 0)
+        {
+            if (AA <= BB)
+            {
+                x = AA;
+                y = BB;
+            } 
+            else // (AA > BB)
+            {
+                x = BB;
+                y = AA;
+            }
+            if (CC <= x)
+            {
+                a = CC;
+                b = x;
+                c = y;
+            }
+            else if (CC <= y && CC >= x)
+            {
+                a = x;
+                b = CC;
+                c = y;
+            }
+            else // (CC > X)
+            {
+                a = x;
+                b = y;
+                c = CC;
+            }
+
+            // в основе теорема Пифагора
+            ab2 = a* a +b * b;
+            c2 = c * c;
+            ab2sqrt = Math.Sqrt(ab2);
+
+            if (ab2 == c2)
+            {
+                status = "прямоугольный";
+            }
+            else if (ab2 < c2)
+            {
+                status = "тупоугольный";
+            }
+            else // (ab2 > c2)
+            {
+                status = "остроугольный";
+            }
+
+            if (a + b <= c)
+            {
+                ops = "треугольник невозможен";
+                status = "";
+            }
+
+        }
+        else
+        {
+            ops = "треугольник невозможен";
+            status = "";
+        }        
+
+    }
+}
